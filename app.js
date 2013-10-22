@@ -25,8 +25,18 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
             });
 
         RestangularProvider.setBaseUrl('http://sgcontrol2.local/rest/');
-        RestangularProvider.setDefaultRequestParams({ access_token: 'ZWJhY2I0YzlmNzAwMmUxNjkxYjRhYjBkZWNmZWRjYTQ1YWNlYTQ5M2ZjMGNjOGI1MTlmNDAzYzIwYjcxZTlhMA' })
-        /*RestangularProvider.setRestangularFields({
-            id: '_id.$oid'
-        });*/
+        RestangularProvider.setDefaultRequestParams({ access_token: 'YzE2MTQwOWRjOThjMzZlZmYxZTI1OGJkODk1Nzc2MTEyYzgyMDM2YjZhMGUwZjc1ZjQ3MDRkMTNjMDE4MDA3OQ' })
+
+        RestangularProvider.setResponseInterceptor(function (data, operation, what, url, response, deferred)
+        {
+            // available headers (CORS exposed)
+            console.log(response.headers());
+
+            data.__headers = response.headers();
+
+            return data;
+        });
+
+
+
     }]);

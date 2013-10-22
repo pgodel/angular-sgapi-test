@@ -1,6 +1,19 @@
 
-<ul>
-    <li ng-repeat="domain in domains">
-        <p>{{ domain.name }}</p>
-    </li>
-</ul>
+<div>
+    Add domain: <input type="text" ng-model="newdomain.name" />
+    <br/>
+    <button type="button" ng-click="addDomain()">Add</button>
+</div>
+
+<table>
+    <tr>
+        <th>#</th>
+        <th>Domain</th>
+        <th> </th>
+    </tr>
+    <tr ng-repeat="domain in domains">
+        <td>{{ $index + 1 }}</td>
+        <td>{{ domain.name }}</td>
+        <td><a ng-click="edit(domain)">Edit</a> <a ng-click="remove(domain, $index)">Remove</a></td>
+    </tr>
+</table>
