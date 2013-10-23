@@ -12,7 +12,7 @@
         <th>Domain</th>
         <th>Actions</th>
     </tr>
-    <tr ng-repeat="domain in domains">
+    <tr ng-repeat="domain in domains | orderBy:'name'">
         <td>{{ domain.id }}</td>
         <td>{{ domain.name }}</td>
         <td><a ng-href="#/domains/{{ domain.id }}/edit">Edit</a> | <a ng-click="remove(domain)">Remove</a></td>
