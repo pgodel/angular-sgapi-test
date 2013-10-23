@@ -1,7 +1,9 @@
 var sgApp = angular.module('sgApp', [
     //'sgControllers',
     //'sgServices',
-    'restangular'
+    'restangular',
+    'cpSvc'
+
 ]);
 
 sgApp.config(['$routeProvider', 'RestangularProvider',
@@ -24,7 +26,8 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
             })*/;
 
         RestangularProvider.setBaseUrl('http://sgcontrol2.local/rest/');
-        RestangularProvider.setDefaultRequestParams({ access_token: 'NjU5YzVkOWQ1ZjU1Y2U5YzdhY2Y4YjdhM2M5OWJhNGZlMGI1N2FmMTAxZDE1ZmY1ZGUwNmRkMWE0NzA3N2QzYw' })
+        //RestangularProvider.setBaseUrl('http://sgcontrol2.rest/rest/');
+        RestangularProvider.setDefaultRequestParams({ access_token: 'YTk4MDNhZDAzZmJjOWI3MGY3OTVkZjdlNTBmNDgzMTg0NDhlYzAxMTBjMzNhNGQzMmU5NzhkYzc3YTAxMDViMg' })
 
         //RestangularProvider.setFullResponse(false);
 
