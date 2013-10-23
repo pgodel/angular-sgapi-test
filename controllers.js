@@ -1,16 +1,16 @@
 'use strict';
 
-function DomainListCtrl($rootScope, $scope, $routeParams, Restangular) {
+function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
 
     $scope.domainsLoaded = false;
 
-    Restangular.all('domains').getList({'filter_server': '4cc4a5c4f597e9db6e660200', 'limit': 50})
-        .then(function (response) {
-            $scope.domains = response;
-            $scope.domainsLoaded = true;
-        });
+    console.log(cpSvc);
 
+    cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', function(domains) {
+        $scope.domains = domains;
+        $scope.domainsLoaded = true;
+    });
 
     $scope.resetNewDomain = function() {
         $scope.newdomain = {
@@ -52,24 +52,26 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular) {
     };
 
 }
-DomainListCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular'];
+DomainListCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc'];
 
-function DomainEditCtrl($rootScope, $scope, $routeParams, Restangular) {
+function DomainEditCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
-    Restangular.one('domains', $routeParams.id).get()
-        .then(function (response) {
-            $scope.domain = response;
-        });
+    cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', function(domains) {
+        $scope.master = cpSvc.getDomainById($routeParams.id);
+        $scope.domain = angular.copy($scope.master);
+    });
 
     $scope.cancel = function() {
         window.history.back();
     };
 
-    $scope.edit = function() {
-        $scope.domain.put().then(function() {
+    $scope.save = function() {
+        $scope.master.name = $scope.domain.name;
+
+        $scope.master.put().then(function() {
             window.location.href = "#/domains";
         });
     };
 
 }
-DomainEditCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular'];
+DomainEditCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc'];
