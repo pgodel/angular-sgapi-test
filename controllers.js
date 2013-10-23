@@ -1,78 +1,65 @@
-/*var sgControllers = angular.module('sgControllers', ['restangular']);
-
-sgControllers.controller('DomainListCtrl', ['$scope', function($scope, Restangular) {
-    var baseDomains = Restangular.all('domains');
-
-    $scope.domains = baseDomains.getList();
-}]);
-
-sgControllers.controller('DomainDetailCtrl', ['$scope', '$routeParams', 'Domain', function($scope, $routeParams, Domain) {
-    $scope.domain = Domain.get({domainName: $routeParams.domainName}, function(domain) {
-        //$scope.mainImageUrl = domain.images[0];
-    });
-
-    $scope.setImage = function(imageUrl) {
-        $scope.mainImageUrl = imageUrl;
-    }
-}]);
-*/
-
-
 'use strict';
 
 function DomainListCtrl($rootScope, $scope, $routeParams, Restangular) {
 
-    var domainList = Restangular.all('domains/').getList({'filter_server': '4cc4a5c4f597e9db6e660200', 'limit': 50});
 
+    $scope.domainsLoaded = false;
 
-
-//console.log(domainList.get('__headers'));
-    $scope.domains = domainList.get('results');
-
+    Restangular.all('domains').getList({'filter_server': '4cc4a5c4f597e9db6e660200', 'limit': 50})
+        .then(function (response) {
+            $scope.domains = response;
+            $scope.domainsLoaded = true;
+        });
 
     $scope.newdomain = {
         name: ''
     };
 
-    //$scope.domain = Domain.get({domainName: $routeParams.domainName}, function(domain) {
-        //$scope.mainImageUrl = domain.images[0];
-    //});
-
-    $scope.addDomain = function() {
+    $scope.add = function() {
 
         var domain = {
             name: $scope.newdomain.name,
             server_id: '4cc4a5c4f597e9db6e660200'
         };
 
-        var domainElement = Restangular.one('domains', domain.name);
+        var list = Restangular.all('domains');
 
-        domainElement.customPUT(domain).then(function () {
-            $scope.domains.push(domainElement.get());
-        }, function (response) {
-            alert("Error: " + response);
+        list.post(domain).then(function (newId) {
+            // fill with the new id and insert into the list
+            domain.id = newId;
+            $scope.domains.push(domain);
         });
     };
 
-    $scope.edit = function(domain) {
-        console.log('edit');
-    };
+    $scope.remove = function(domain) {
 
-    $scope.remove = function(domain, index) {
-        /*
         if (confirm("Are you sure you want to remove the domain " + domain.name + "?")) {
-            var domainElement = Restangular.one('domains', domain.name);
-
-            domainElement.remove()
-                .then(function () {
-                    console.log($scope.domains);
-                    $scope.domains.splice(index, 1);
-                });
-        }*/
-
-        Restangular.one("domains", domain.name).remove().then(function(){
-            $scope.domains = Restangular.all('domains/').getList({'filter_server': '4cc4a5c4f597e9db6e660200', 'limit': 50}).get('results');
-        });
+            domain.remove().then(function() {
+                // remove from list
+                $scope.domains = _.without($scope.domains, domain);
+            });
+        }
     };
+
 }
 DomainListCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular'];
+
+function DomainEditCtrl($rootScope, $scope, $routeParams, Restangular) {
+
+    Restangular.one('domains', $routeParams.id).get()
+        .then(function (response) {
+            $scope.domain = response;
+        });
+
+    $scope.cancel = function() {
+        window.history.back();
+    };
+
+    $scope.edit = function() {
+        $scope.domain.put().then(function() {
+            window.location.href = "#/domains";
+        });
+    };
+
+}
+DomainEditCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular'];

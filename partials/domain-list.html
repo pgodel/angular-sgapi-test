@@ -1,19 +1,20 @@
-
 <div>
     Add domain: <input type="text" ng-model="newdomain.name" />
     <br/>
-    <button type="button" ng-click="addDomain()">Add</button>
+    <button type="button" ng-click="add()">Add</button>
 </div>
 
-<table>
+<div ng-hide="domainsLoaded">Loading domains...</div>
+
+<table ng-show="domainsLoaded">
     <tr>
-        <th>#</th>
+        <th>ID</th>
         <th>Domain</th>
-        <th> </th>
+        <th>Actions</th>
     </tr>
     <tr ng-repeat="domain in domains">
-        <td>{{ $index + 1 }}</td>
+        <td>{{ domain.id }}</td>
         <td>{{ domain.name }}</td>
-        <td><a ng-click="edit(domain)">Edit</a> <a ng-click="remove(domain, $index)">Remove</a></td>
+        <td><a ng-href="#/domains/{{ domain.id }}/edit">Edit</a> | <a ng-click="remove(domain)">Remove</a></td>
     </tr>
 </table>
