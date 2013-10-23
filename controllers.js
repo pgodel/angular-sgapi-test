@@ -2,10 +2,7 @@
 
 function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
-
     $scope.domainsLoaded = false;
-
-    console.log(cpSvc);
 
     cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', function(domains) {
         $scope.domains = domains;
