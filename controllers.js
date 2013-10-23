@@ -58,7 +58,7 @@ function DomainEditCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
     cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', function(domains) {
         $scope.master = cpSvc.getDomainById($routeParams.id);
-        $scope.domain = angular.copy($scope.master);
+        $scope.domain = Restangular.copy($scope.master);
     });
 
     $scope.cancel = function() {
@@ -66,9 +66,8 @@ function DomainEditCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     };
 
     $scope.save = function() {
-        $scope.master.name = $scope.domain.name;
-
-        $scope.master.put().then(function() {
+        $scope.domain.put().then(function() {
+            cpSvc.domains = cpSvc.replaceObject(cpSvc.domains, $scope.master, $scope.domain);
             window.location.href = "#/domains";
         });
     };

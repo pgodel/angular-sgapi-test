@@ -62,8 +62,12 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular) {
                         onSuccess.call(undefined, svc.domains);
                     }
                 });
+        },
+        replaceObject: function(list, existing, newObject) {
+            list = _.without(list, existing);
+            list.push(newObject);
+            return list;
         }
-
     }
 
     return svc;
