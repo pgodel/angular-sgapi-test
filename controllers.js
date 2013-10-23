@@ -11,9 +11,15 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular) {
             $scope.domainsLoaded = true;
         });
 
-    $scope.newdomain = {
-        name: ''
-    };
+
+    $scope.resetNewDomain = function() {
+        $scope.newdomain = {
+            name: ''
+        };
+    }
+
+    $scope.resetNewDomain();
+
 
     $scope.add = function() {
 
@@ -30,7 +36,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular) {
             Restangular.one('domains', newId).get()
                     .then(function (response) {
                         $scope.domains.push(response);
-                        $scope.domain = response;
+                        $scope.resetNewDomain();
                     });
         });
     };
