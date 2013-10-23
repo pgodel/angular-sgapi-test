@@ -25,9 +25,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
             server_id: '4cc4a5c4f597e9db6e660200'
         };
 
-        var list = Restangular.all('domains');
-
-        list.post(domain).then(function (newId) {
+        cpSvc.domains.post(domain).then(function (newId) {
 
             // fill with the new id and insert into the list
             Restangular.one('domains', newId).get()

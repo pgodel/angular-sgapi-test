@@ -37,12 +37,7 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular) {
             }
         },
         getDomainById: function (id) {
-            for (var i in svc.domains) {
-                if (svc.domains[i].id == id) {
-                    return svc.domains[i];
-                }
-            }
-            return null;
+            return _.findWhere(svc.domains, {'id': id});
         },
         loadDomains: function (serverId, onSuccess, reload) {
             if (svc.domains && !reload) {
