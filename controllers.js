@@ -25,9 +25,13 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular) {
         var list = Restangular.all('domains');
 
         list.post(domain).then(function (newId) {
+
             // fill with the new id and insert into the list
-            domain.id = newId;
-            $scope.domains.push(domain);
+            Restangular.one('domains', newId).get()
+                    .then(function (response) {
+                        $scope.domains.push(response);
+                        $scope.domain = response;
+                    });
         });
     };
 
