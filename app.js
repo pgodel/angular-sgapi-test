@@ -2,8 +2,8 @@ var sgApp = angular.module('sgApp', [
     //'sgControllers',
     //'sgServices',
     'restangular',
-    'cpSvc'
-
+    'cpSvc',
+    'ui.bootstrap'
 ]);
 
 sgApp.config(['$routeProvider', 'RestangularProvider',
@@ -27,7 +27,7 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
 
         RestangularProvider.setBaseUrl('http://sgcontrol2.local/rest/');
         //RestangularProvider.setBaseUrl('http://sgcontrol2.rest/rest/');
-        RestangularProvider.setDefaultRequestParams({ access_token: 'YTk4MDNhZDAzZmJjOWI3MGY3OTVkZjdlNTBmNDgzMTg0NDhlYzAxMTBjMzNhNGQzMmU5NzhkYzc3YTAxMDViMg' })
+        RestangularProvider.setDefaultRequestParams({ access_token: 'MTY1NWU2MzM5Y2E1YmRlY2EyY2Q2YzYzNjFiNmQ3MjI3MDdmODczNDM3ZWNhN2M1NmE3MDlmZmMyMmE0ZWM0Yw' })
 
         //RestangularProvider.setFullResponse(false);
 
@@ -37,6 +37,11 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
             if (operation === "getList") {
                 // Here we're returning an Array which has one special property metadata with our extra information
                 newResponse = data.results;
+                newResponse.__paginator = {
+                    page: data.page,
+                    limit: data.limit,
+                    total: data.total
+                };
                 //newResponse.metadata = response.data.meta;
             } else if (operation === 'post') {
                 newResponse = response.headers('Location').replace(url + '/', '');

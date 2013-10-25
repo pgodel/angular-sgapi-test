@@ -39,7 +39,7 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular) {
         getDomainById: function (id) {
             return _.findWhere(svc.domains, {'id': id});
         },
-        loadDomains: function (serverId, onSuccess, reload) {
+        loadDomains: function (serverId, page, onSuccess, reload) {
             if (svc.domains && !reload) {
                 $rootScope.$broadcast('sgSvcLoadDomains');
                 if (angular.isFunction(onSuccess)) {
@@ -49,7 +49,17 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular) {
             }
             svc.domains = [];
 
-            return Restangular.all('domains').getList({'filter_server': serverId, 'limit': 50})
+            return Restangular.all('domains').getList({'filter_server': serverId, 'page': page, 'limit': 10})
+                .then(function (response) {
+                    svc.domains = response;
+                    $rootScope.$broadcast('sgSvcLoadDomains');
+                    if (angular.isFunction(onSuccess)) {
+                        onSuccess.call(undefined, svc.domains);
+                    }
+                });
+        },
+        searchDomains: function (serverId, searchValue, page, onSuccess, reload) {
+            return Restangular.all('domains').getList({'filter_server': serverId, 'filter_name': searchValue, 'page': page, 'limit': 10})
                 .then(function (response) {
                     svc.domains = response;
                     $rootScope.$broadcast('sgSvcLoadDomains');

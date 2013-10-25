@@ -3,10 +3,16 @@
 function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
     $scope.domainsLoaded = false;
+    $scope.isSearch = false;
+    $scope.searchValue = '';
 
-    cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', function(domains) {
+
+
+    cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', 1, function(domains) {
         $scope.domains = domains;
         $scope.domainsLoaded = true;
+
+        $scope.paginator = domains.__paginator;
     });
 
     $scope.resetNewDomain = function() {
@@ -45,6 +51,32 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
             });
         }
     };
+
+    $scope.search = function() {
+        cpSvc.searchDomains('4cc4a5c4f597e9db6e660200', $scope.searchValue, 1, function(domains) {
+            $scope.domains = domains;
+            $scope.domainsLoaded = true;
+
+            $scope.paginator = domains.__paginator;
+        });
+    };
+
+    $scope.$watch("paginator.page", function( newVal, oldVal ){
+
+        console.log(newVal, oldVal);
+
+        if (newVal != undefined && oldVal != undefined) {
+            $scope.domainsLoaded = false;
+            cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', newVal, function(domains) {
+                $scope.domains = domains;
+                $scope.domainsLoaded = true;
+                $scope.paginator = domains.__paginator;
+            }, true);
+        }
+
+
+
+    } );
 
 }
 DomainListCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc'];
