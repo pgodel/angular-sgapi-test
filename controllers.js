@@ -5,8 +5,16 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     $scope.domainsLoaded = false;
     $scope.isSearch = false;
     $scope.searchValue = '';
+    $scope.async = {
+        time: 10,
+        error_time: 0
+    };
 
-
+    $scope.status = {
+        value: 0,
+        type: 'info'
+    };
+    $scope.statusText = '';
 
     cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', 1, function(domains) {
         $scope.domains = domains;
@@ -53,12 +61,55 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     };
 
     $scope.search = function() {
+        $scope.domainsLoaded = false;
         cpSvc.searchDomains('4cc4a5c4f597e9db6e660200', $scope.searchValue, 1, function(domains) {
             $scope.domains = domains;
             $scope.domainsLoaded = true;
 
             $scope.paginator = domains.__paginator;
         });
+    };
+
+    $scope.removeSearch = function() {
+        $scope.domainsLoaded = false;
+        cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', 1, function(domains) {
+            $scope.domains = domains;
+            $scope.domainsLoaded = true;
+
+            $scope.paginator = domains.__paginator;
+        }, true);
+    };
+
+
+    $scope.currentAsync = null;
+
+    $scope.goAsync = function() {
+        var types = ['success', 'info', 'warning', 'danger'];
+
+        cpSvc.async('4cc4a5c4f597e9db6e660200', $scope.async.time, $scope.status, function() {
+            $scope.statusText = 'completed';
+            $scope.status.value = 100;
+            $scope.status.type = types[0];
+        }, function(result) {
+            if (result.status == 6) {
+                $scope.statusText = 'cancelled';
+            } else {
+                $scope.statusText = 'error';
+            }
+
+            $scope.status.type = types[3];
+        }, function(result) {
+            $scope.statusText = 'running';
+            $scope.status.value = result.percent;
+            $scope.status.type = types[1];
+
+            $scope.currentAsync = result.id;
+        }, $scope.async.error_time);
+
+    };
+
+    $scope.cancelAsync = function() {
+        Restangular.one("tasks", $scope.currentAsync).remove();
     };
 
     $scope.$watch("paginator.page", function( newVal, oldVal ){

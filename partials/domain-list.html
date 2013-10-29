@@ -8,8 +8,23 @@
     Search: <input type="search" ng-model="searchValue" />
     <br/>
     <button type="button" ng-click="search()">Search</button>
+    <button type="button" ng-click="removeSearch()">Go back to results</button>
 </div>
 
+<div>
+    <div>Async tasks</div>
+    Time: <input type="search" ng-model="async.time" />
+    <br/>
+    Error time: <input type="search" ng-model="async.error_time" />
+    <br/>
+    <button type="button" ng-click="goAsync()">Create</button>
+    <button type="button" ng-click="cancelAsync()">Cancel</button>
+
+    <span class="label label-important">{{ status.value }}%</span>
+    <span>{{ statusText }}</span>
+
+    <progress percent="status" class="progress-striped active"></progress>
+</div>
 
 <table class="table">
     <tr>

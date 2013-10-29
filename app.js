@@ -31,9 +31,10 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
 
         //RestangularProvider.setFullResponse(false);
 
+
         RestangularProvider.setResponseExtractor(function(data, operation, what, url, response) {
             var newResponse;
-
+console.log(response.headers(), url);
             if (operation === "getList") {
                 // Here we're returning an Array which has one special property metadata with our extra information
                 newResponse = data.results;
@@ -44,7 +45,13 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
                 };
                 //newResponse.metadata = response.data.meta;
             } else if (operation === 'post') {
-                newResponse = response.headers('Location').replace(url + '/', '');
+                if (response.headers('Location') != undefined) {
+                    newResponse = response.headers('Location').replace(url + '/', '');
+                } else if (response.headers('X-sgapi-location') != undefined) {
+                    newResponse = response.headers('X-sgapi-location').replace(url + '/', '');
+                    console.log(newResponse);
+                }
+
             } else if (operation === 'delete') {
                 newResponse = null;
             }
@@ -58,7 +65,7 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
 
         RestangularProvider.setErrorInterceptor(function(response) {
             alert('Error: ' + response.data.message);
-
+console.log(response);
             return false;
         });
 
