@@ -1,17 +1,10 @@
-<div>
+<div class="well">
     Add domain: <input type="text" ng-model="newdomain.name" />
     <br/>
     <button type="button" ng-click="add()">Add</button>
 </div>
 
-<div>
-    Search: <input type="search" ng-model="searchValue" />
-    <br/>
-    <button type="button" ng-click="search()">Search</button>
-    <button type="button" ng-click="removeSearch()">Go back to results</button>
-</div>
-
-<div>
+<div class="well">
     <div>Async tasks</div>
     Time: <input type="search" ng-model="async.time" />
     <br/>
@@ -26,20 +19,26 @@
     <progress percent="status" class="progress-striped active"></progress>
 </div>
 
+<div ng-hide="domains" class="alert alert-info">Loading domains...</div>
+<div ng-show="domains">
+<div>
+    Search: <input type="search" ng-model="searchValue" />
+    <button type="button" ng-click="search()">Search</button>
+    <button type="button" ng-click="removeSearch()">Go back to results</button>
+</div>
 <table class="table">
     <tr>
         <th>ID</th>
         <th>Domain</th>
         <th>Actions</th>
     </tr>
-    <tr ng-show="domainsLoaded" ng-repeat="domain in domains | orderBy:'name'">
+    <tr ng-repeat="domain in domains | orderBy:'name'">
         <td>{{ domain.id }}</td>
         <td>{{ domain.name }}</td>
         <td><a ng-href="#/domains/{{ domain.id }}/edit">Edit</a> | <a ng-click="remove(domain)">Remove</a></td>
     </tr>
-    <tr>
-        <td colspan="3" ng-hide="domainsLoaded">Loading domains...</td>
-    </tr>
 </table>
 
 <pagination total-items="paginator.total" page="paginator.page" num-pages="paginator.numPages"></pagination>
+    <span class="alert alert-block" ng-hide="domainsLoaded">Loading domains...</span>
+</div>
