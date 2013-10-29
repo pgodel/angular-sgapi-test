@@ -26,15 +26,19 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
             })*/;
 
         RestangularProvider.setBaseUrl('http://sgcontrol2.local/rest/');
-        //RestangularProvider.setBaseUrl('http://sgcontrol2.rest/rest/');
-        RestangularProvider.setDefaultRequestParams({ access_token: 'MTY1NWU2MzM5Y2E1YmRlY2EyY2Q2YzYzNjFiNmQ3MjI3MDdmODczNDM3ZWNhN2M1NmE3MDlmZmMyMmE0ZWM0Yw' })
+        RestangularProvider.setDefaultRequestParams({
+            access_token: 'MTY1NWU2MzM5Y2E1YmRlY2EyY2Q2YzYzNjFiNmQ3MjI3MDdmODczNDM3ZWNhN2M1NmE3MDlmZmMyMmE0ZWM0Yw',
+        });
+        RestangularProvider.setDefaultHeaders({
+            'X-ServerGrove-Client': 'sgcontrol3'
+        });
 
         //RestangularProvider.setFullResponse(false);
 
 
         RestangularProvider.setResponseExtractor(function(data, operation, what, url, response) {
             var newResponse;
-console.log(response.headers(), url);
+
             if (operation === "getList") {
                 // Here we're returning an Array which has one special property metadata with our extra information
                 newResponse = data.results;
@@ -43,9 +47,11 @@ console.log(response.headers(), url);
                     limit: data.limit,
                     total: data.total
                 };
-                //newResponse.metadata = response.data.meta;
             } else if (operation === 'post') {
-                if (response.headers('Location') != undefined) {
+                if (response.headers('x-servergove-resource-id') != undefined) {
+                    newResponse = response.headers('x-servergove-resource-id');
+                    console.log('yay');
+                } else if (response.headers('Location') != undefined) {
                     newResponse = response.headers('Location').replace(url + '/', '');
                 } else if (response.headers('X-sgapi-location') != undefined) {
                     newResponse = response.headers('X-sgapi-location').replace(url + '/', '');
