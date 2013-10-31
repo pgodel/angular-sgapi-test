@@ -1,23 +1,3 @@
-/*var sgServices = angular.module('sgServices', ['ngResource']);
-
-sgServices.factory('Domains', ['$resource',
-    function($resource){
-        return $resource('domains/:domainName.json', {}, {
-            //query: {method:'GET', params:{phoneId:'phones'}, isArray:true}
-        });
-    }]);
-*/
-
-/*
-angular.module('sgServices', ['ngResource']).
-    factory('Domain', function($resource){
-        return $resource('domains/:domainName.json', {}, {
-            query: {method:'GET', params:{domainName:'bob.com'}, isArray:true}
-        });
-    });
-*/
-var xxx;
-
 var cpSvc = angular.module('cpSvc', ['restangular']);
 cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
     var svc = {
@@ -108,10 +88,6 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                         })
 
                     }, 1000);
-
-
-
-
 
                 });
         },

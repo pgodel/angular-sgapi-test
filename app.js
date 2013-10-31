@@ -1,6 +1,4 @@
 var sgApp = angular.module('sgApp', [
-    //'sgControllers',
-    //'sgServices',
     'restangular',
     'cpSvc',
     'ui.bootstrap'
@@ -33,13 +31,21 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
             'X-ServerGrove-Client': 'sgcontrol3'
         });
 
-        //RestangularProvider.setFullResponse(false);
+        cpSvc.extractResourceId = function(headers) {
+            if (headers('x-servergove-resource-id') != undefined) {
+                return headers('x-servergove-resource-id');
+            }
 
+            if (headers('Location') != undefined) {
+                return headers('Location').replace(url + '/', '');
+            }
+
+            return null;
+        };
 
         RestangularProvider.setResponseExtractor(function(data, operation, what, url, response) {
             var newResponse;
 
-            console.log(operation);
             if (operation === "getList") {
                 // Here we're returning an Array which has one special property metadata with our extra information
                 newResponse = data.results;
@@ -49,22 +55,9 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
                     total: data.total
                 };
             } else if (operation === 'post') {
-                if (response.headers('x-servergove-resource-id') != undefined) {
-                    newResponse = response.headers('x-servergove-resource-id');
-                } else if (response.headers('Location') != undefined) {
-                    newResponse = response.headers('Location').replace(url + '/', '');
-                } else if (response.headers('X-sgapi-location') != undefined) {
-                    newResponse = response.headers('X-sgapi-location').replace(url + '/', '');
-                }
-
+                newResponse = cpSvc.extractResourceId(response.headers);
             } else if (operation === 'remove') {
-                console.log(response.headers());
-                if (response.headers('x-servergove-resource-id') != undefined) {
-                    newResponse = response.headers('x-servergove-resource-id');
-                } else {
-                    newResponse = null;
-                }
-console.log('*****' + newResponse);
+                newResponse = cpSvc.extractResourceId(response.headers);
             }
             else {
                 // This is an element
@@ -76,35 +69,9 @@ console.log('*****' + newResponse);
 
         RestangularProvider.setErrorInterceptor(function(response) {
             alert('Error: ' + response.data.message);
-console.log(response);
+
             return false;
         });
 
-/*
-        RestangularProvider.setResponseInterceptor(function (data, operation, what, url, response, deferred)
-        {
-            console.log('interceptor for ' + operation);
-
-            // available headers (CORS exposed)
-            //console.log(response.headers());
-
-            //data.__headers = response.headers();
-
-
-            var newResponse;
-            if (operation === "getList") {
-                // Here we're returning an Array which has one special property metadata with our extra information
-                newResponse = response.results;
-                //newResponse.metadata = response.data.meta;
-            } else {
-                // This is an element
-                newResponse = response;
-            }
-            return newResponse;
-
-        });
-*/
-
-
-
-    }]);
+    }
+]);
