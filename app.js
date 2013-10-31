@@ -39,6 +39,7 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
         RestangularProvider.setResponseExtractor(function(data, operation, what, url, response) {
             var newResponse;
 
+            console.log(operation);
             if (operation === "getList") {
                 // Here we're returning an Array which has one special property metadata with our extra information
                 newResponse = data.results;
@@ -50,16 +51,20 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
             } else if (operation === 'post') {
                 if (response.headers('x-servergove-resource-id') != undefined) {
                     newResponse = response.headers('x-servergove-resource-id');
-                    console.log('yay');
                 } else if (response.headers('Location') != undefined) {
                     newResponse = response.headers('Location').replace(url + '/', '');
                 } else if (response.headers('X-sgapi-location') != undefined) {
                     newResponse = response.headers('X-sgapi-location').replace(url + '/', '');
-                    console.log(newResponse);
                 }
 
-            } else if (operation === 'delete') {
-                newResponse = null;
+            } else if (operation === 'remove') {
+                console.log(response.headers());
+                if (response.headers('x-servergove-resource-id') != undefined) {
+                    newResponse = response.headers('x-servergove-resource-id');
+                } else {
+                    newResponse = null;
+                }
+console.log('*****' + newResponse);
             }
             else {
                 // This is an element

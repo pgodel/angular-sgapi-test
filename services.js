@@ -69,6 +69,52 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                     }
                 });
         },
+        asyncRequest: function(task, onSuccess, onError, onNotify) {
+            return task.then(function (taskId) {
+
+                    //var finished = false;
+
+
+                    $timeout(function asyncInterval() {
+                        Restangular.one('tasks', taskId).get().then(function (result) {
+
+                            onNotify.call(undefined, result);
+
+                            switch (result.status) {
+                                case 1:
+                                case 2:
+                                case 5:
+                                case 7:
+                                    // task still running
+                                    $timeout(asyncInterval, 1000);
+                                    break;
+                                case 3:
+                                    // task completed
+                                    console.log('completed');
+                                    onSuccess.call(undefined, result);
+                                    break;
+                                case 4:
+                                    // task failed
+                                    console.log('error');
+                                    onError.call(undefined, result);
+                                    break;
+                                case 6:
+                                    // task cancelled
+                                    console.log('cancelled');
+                                    onError.call(undefined, result);
+                                    break;
+                            }
+
+                        })
+
+                    }, 1000);
+
+
+
+
+
+                });
+        },
         async: function (serverId, time, val, onSuccess, onError, onNotify, errorTime) {
             return Restangular.all('tasks').post({'type': 'test', 'server_id': serverId, 'test_time': time, 'test_error_time': errorTime})
                 .then(function (taskId) {

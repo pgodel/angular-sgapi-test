@@ -53,10 +53,40 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     $scope.remove = function(domain) {
 
         if (confirm("Are you sure you want to remove the domain " + domain.name + "?")) {
+
+            cpSvc.asyncRequest(domain.remove({'async': 1}), function() {
+                // domain removed, get page
+
+                var pagesNb = Math.ceil($scope.paginator.page / $scope.paginator.limit);
+                var lastPageItemsNb = $scope.paginator.total - ((pagesNb-1) * $scope.paginator.limit);
+                var newPage;
+
+                if ($scope.paginator.page < pagesNb || lastPageItemsNb > 1) {
+                    newPage = $scope.paginator.page;
+                } else {
+                    newPage = $scope.paginator.page - 1;
+                }
+
+                cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', newPage, function(domains) {
+                    $scope.domains = domains;
+                    $scope.domainsLoaded = true;
+
+                    $scope.paginator = domains.__paginator;
+                });
+
+            }, function (response) {
+                alert(response.error);
+            }, function (response) {
+
+            });
+
+            $scope.domains = _.without($scope.domains, domain);
+
+            /*
             domain.remove().then(function() {
                 // remove from list
                 $scope.domains = _.without($scope.domains, domain);
-            });
+            });*/
         }
     };
 
