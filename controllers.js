@@ -54,7 +54,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
         if (confirm("Are you sure you want to remove the domain " + domain.name + "?")) {
 
-            cpSvc.asyncRequest(domain.remove({'async': 1}), function() {
+            cpSvc.asyncRequest(domain.remove({'async': 1}), 1000, function() {
                 // domain removed, get page
 
                 var pagesNb = Math.ceil($scope.paginator.page / $scope.paginator.limit);

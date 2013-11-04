@@ -49,16 +49,14 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                     }
                 });
         },
-        asyncRequest: function(task, onSuccess, onError, onNotify) {
+        asyncRequest: function(task, interval, onSuccess, onError, onNotify) {
             return task.then(function (taskId) {
-
-                    //var finished = false;
-
-
                     $timeout(function asyncInterval() {
                         Restangular.one('tasks', taskId).get().then(function (result) {
 
-                            onNotify.call(undefined, result);
+                            if (angular.isFunction(onNotify)) {
+                                onNotify.call(undefined, result);
+                            }
 
                             switch (result.status) {
                                 case 1:
@@ -70,24 +68,27 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                                     break;
                                 case 3:
                                     // task completed
-                                    console.log('completed');
-                                    onSuccess.call(undefined, result);
+                                    if (angular.isFunction(onSuccess)) {
+                                        onSuccess.call(undefined, result);
+                                    }
                                     break;
                                 case 4:
                                     // task failed
-                                    console.log('error');
-                                    onError.call(undefined, result);
+                                    if (angular.isFunction(onError)) {
+                                        onError.call(undefined, result);
+                                    }
                                     break;
                                 case 6:
                                     // task cancelled
-                                    console.log('cancelled');
-                                    onError.call(undefined, result);
+                                    if (angular.isFunction(onError)) {
+                                        onError.call(undefined, result);
+                                    }
                                     break;
                             }
 
                         })
 
-                    }, 1000);
+                    }, interval);
 
                 });
         },
