@@ -25,7 +25,7 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
 
         RestangularProvider.setBaseUrl('http://sgcontrol2.local/rest/');
         RestangularProvider.setDefaultRequestParams({
-            access_token: 'MTY1NWU2MzM5Y2E1YmRlY2EyY2Q2YzYzNjFiNmQ3MjI3MDdmODczNDM3ZWNhN2M1NmE3MDlmZmMyMmE0ZWM0Yw',
+            access_token: 'Zjk3NWJkMDliMTAxOTdkYThiZGJmMmMzOWM4MDBkMzEwYzc1NzJhNjY2ZDc4NDE1MzUyMjgxMjhlNWM3MjNkYQ',
         });
         RestangularProvider.setDefaultHeaders({
             'X-ServerGrove-Client': 'sgcontrol3'

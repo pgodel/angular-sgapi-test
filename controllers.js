@@ -72,7 +72,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
                     $scope.domainsLoaded = true;
 
                     $scope.paginator = domains.__paginator;
-                });
+                }, true);
 
             }, function (response) {
                 alert(response.error);
