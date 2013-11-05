@@ -1,5 +1,42 @@
 'use strict';
 
+function ServerListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
+
+
+    $scope.servers = {
+        selected: null,
+        current: {
+            servers: [],
+            servers_search: [],
+            paginator: {}
+        },
+        list: []
+    };
+
+    $scope.loadingServers = false;
+
+    $scope.loadingServers = true;
+    cpSvc.loadServers(0, function(servers) {
+        $scope.servers.list = servers;
+        $scope.loadingServers = false;
+
+        $scope.servers.paginator = servers.__paginator;
+    });
+
+
+    $scope.$watch("servers.paginator.page", function( newVal, oldVal ){
+        if (newVal != undefined && oldVal != undefined) {
+            cpSvc.loadServers(newVal, function(servers) {
+                $scope.servers.servers = servers;
+                $scope.servers.paginator = servers.__paginator;
+            }, true);
+        }
+
+    } );
+
+
+}
+
 function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
 
@@ -24,7 +61,6 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
         }
     ];
 
-    $scope.loadingServers = false;
     $scope.loadingDomains = false;
 
     $scope.isSearch = false;
@@ -44,6 +80,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
     $scope.dns_service = '0';
 
+    $scope.loadingServers = false;
 
     $scope.loadingServers = true;
     cpSvc.loadServers(0, function(servers) {

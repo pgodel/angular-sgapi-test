@@ -1,0 +1,33 @@
+<h1>Servers</h1>
+
+<div class="alert alert-block" ng-show="loadingServers">Loading servers...</div>
+
+<div ng-hide="loadingServers">
+    <table class="table table-condensed table-striped">
+        <tr>
+            <th>ID</th>
+            <th>Hostname</th>
+            <th>Actions</th>
+        </tr>
+        <tr ng-hide="isSearch" ng-repeat="server in servers.list | orderBy:'hostname'">
+            <td><a href="#/servers/{{server.id}}/domains">{{ server.id }}</a></td>
+            <td>{{ server.hostname }}</td>
+            <td>
+                <a ng-href="#/servers/{{ server.id }}/edit" class="btn btn-small"><i class="icon-pencil"></i> Edit</a>
+                <a ng-click="remove(server)" class="btn btn-small"><i class="icon-remove"></i> Remove</a>
+            </td>
+        </tr>
+        <tr ng-show="isSearch" ng-repeat="server in servers.current.domains_search | orderBy:'hostname'">
+            <td>{{ server.id }}</td>
+            <td>{{ server.hostname }}</td>
+            <td>
+                <a ng-href="#/servers/{{ server.id }}/edit" class="btn btn-small"><i class="icon-pencil"></i> Edit</a>
+                <a ng-click="remove(server)" class="btn btn-small"><i class="icon-remove"></i> Remove</a>
+            </td>
+        </tr>
+        <tr ng-show="servers.list.length == 0">
+            <td colspan="3">There are no servers in your account</td>
+        </tr>
+    </table>
+    <pagination total-items="servers.paginator.total" page="servers.paginator.page" num-pages="servers.paginator.numPages"></pagination>
+</div>
