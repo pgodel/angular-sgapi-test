@@ -42,6 +42,9 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     };
     $scope.statusText = '';
 
+    $scope.dns_service = '0';
+
+
     $scope.loadingServers = true;
     cpSvc.loadServers(0, function(servers) {
         $scope.servers.list = servers;
@@ -49,13 +52,6 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
         //$scope.servers.paginator = servers.__paginator;
     });
-
-    /*cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', 1, function(domains) {
-        $scope.domains = domains;
-        $scope.domainsLoaded = true;
-
-        $scope.paginator = domains.__paginator;
-    });*/
 
     $scope.resetNewDomain = function() {
         $scope.newdomain = {
@@ -67,10 +63,10 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
 
     $scope.add = function() {
-
         var domain = {
             name: $scope.newdomain.name,
-            server_id: '4cc4a5c4f597e9db6e660200'
+            server_id: '4cc4a5c4f597e9db6e660200',
+            services: {'dns': $scope.dns_service}
         };
 
         cpSvc.domains.post(domain).then(function (newId) {
