@@ -26,7 +26,7 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                 if (angular.isFunction(onSuccess)) {
                     onSuccess.call(undefined, svc.domains);
                 }
-                return
+                return;
             }
             svc.domains = [];
 
@@ -36,6 +36,25 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                     $rootScope.$broadcast('sgSvcLoadDomains');
                     if (angular.isFunction(onSuccess)) {
                         onSuccess.call(undefined, svc.domains);
+                    }
+                });
+        },
+        loadServers: function (page, onSuccess, reload) {
+            if (svc.domains && !reload) {
+                $rootScope.$broadcast('sgSvcLoadServers');
+                if (angular.isFunction(onSuccess)) {
+                    onSuccess.call(undefined, svc.servers);
+                }
+                return;
+            }
+            svc.servers = [];
+
+            return Restangular.all('servers').getList({'page': page, 'limit': 10})
+                .then(function (response) {
+                    svc.servers = response;
+                    $rootScope.$broadcast('sgSvcLoadServers');
+                    if (angular.isFunction(onSuccess)) {
+                        onSuccess.call(undefined, svc.servers);
                     }
                 });
         },
@@ -49,10 +68,16 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                     }
                 });
         },
-        asyncRequest: function(task, interval, onSuccess, onError, onNotify) {
+        asyncRequest: function(task, interval, onSuccess, onError, onNotify, onCreate) {
             return task.then(function (taskId) {
+                var firstRequest = true;
                     $timeout(function asyncInterval() {
                         Restangular.one('tasks', taskId).get().then(function (result) {
+
+                            if (firstRequest && angular.isFunction(onCreate)) {
+                                onCreate.call(undefined, result);
+                                firstRequest = false;
+                            }
 
                             if (angular.isFunction(onNotify)) {
                                 onNotify.call(undefined, result);
@@ -64,12 +89,12 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                                 case 5:
                                 case 7:
                                     // task still running
-                                    $timeout(asyncInterval, 1000);
+                                    $timeout(asyncInterval, interval);
                                     break;
                                 case 3:
                                     // task completed
                                     if (angular.isFunction(onSuccess)) {
-                                        onSuccess.call(undefined, result);
+                                        onSuccess.call(undefined, result, taskId);
                                     }
                                     break;
                                 case 4:
@@ -92,17 +117,19 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
 
                 });
         },
-        async: function (serverId, time, val, onSuccess, onError, onNotify, errorTime) {
+        async: function (serverId, time, val, onSuccess, onError, onNotify, errorTime, onCreated) {
             return Restangular.all('tasks').post({'type': 'test', 'server_id': serverId, 'test_time': time, 'test_error_time': errorTime})
                 .then(function (taskId) {
 
                     //var finished = false;
 
+                    onCreated.call(undefined, taskId);
+
 
                     $timeout(function asyncInterval() {
                         Restangular.one('tasks', taskId).get().then(function (result) {
 
-                            onNotify.call(undefined, result);
+                            onNotify.call(undefined, result, taskId);
 
                             switch (result.status) {
                                 case 1:
@@ -115,17 +142,17 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                                 case 3:
                                     // task completed
                                     console.log('completed');
-                                    onSuccess.call(undefined, result);
+                                    onSuccess.call(undefined, result, taskId);
                                     break;
                                 case 4:
                                     // task failed
                                     console.log('error');
-                                    onError.call(undefined, result);
+                                    onError.call(undefined, result, taskId);
                                     break;
                                 case 6:
                                     // task cancelled
                                     console.log('cancelled');
-                                    onError.call(undefined, result);
+                                    onError.call(undefined, result, taskId);
                                     break;
                             }
 

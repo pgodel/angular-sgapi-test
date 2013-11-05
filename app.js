@@ -67,6 +67,7 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
             return newResponse;
         });
 
+
         RestangularProvider.setErrorInterceptor(function(response) {
             alert('Error: ' + response.data.message);
 

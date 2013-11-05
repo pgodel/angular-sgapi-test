@@ -1,44 +1,84 @@
-<div class="well">
-    Add domain: <input type="text" ng-model="newdomain.name" />
-    <br/>
-    <button type="button" ng-click="add()">Add</button>
+<div class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Add new domain</h3>
+    </div>
+    <div class="modal-body">
+        Domain name: <input type="text" ng-model="newdomain.name" />
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn">Close</a>
+        <a href="#" ng-click="add()" class="btn btn-primary">Add</a>
+    </div>
 </div>
 
-<div class="well">
-    <div>Async tasks</div>
-    Time: <input type="search" ng-model="async.time" />
-    <br/>
-    Error time: <input type="search" ng-model="async.error_time" />
-    <br/>
-    <button type="button" ng-click="goAsync()">Create</button>
-    <button type="button" ng-click="cancelAsync()">Cancel</button>
-
-    <span class="label label-important">{{ status.value }}%</span>
-    <span>{{ statusText }}</span>
-
-    <progress percent="status" class="progress-striped active"></progress>
+<div class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Async tasks tester</h3>
+    </div>
+    <div class="modal-body">
+        Time: <input type="text" ng-model="async.time" />
+        <br/>
+        Error time: <input type="text" ng-model="async.error_time" />
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn">Close</a>
+        <a href="#" ng-click="goAsync()" class="btn btn-primary">Test</a>
+    </div>
 </div>
 
-<div ng-hide="domains" class="alert alert-info">Loading domains...</div>
-<div ng-show="domains">
-<div>
-    Search: <input type="search" ng-model="searchValue" />
-    <button type="button" ng-click="search()">Search</button>
-    <button type="button" ng-click="removeSearch()">Go back to results</button>
-</div>
-<table class="table">
-    <tr>
-        <th>ID</th>
-        <th>Domain</th>
-        <th>Actions</th>
-    </tr>
-    <tr ng-repeat="domain in domains | orderBy:'name'">
-        <td>{{ domain.id }}</td>
-        <td>{{ domain.name }}</td>
-        <td><a ng-href="#/domains/{{ domain.id }}/edit">Edit</a> | <a ng-click="remove(domain)">Remove</a></td>
-    </tr>
-</table>
+<h1>Domains</h1>
 
-<pagination total-items="paginator.total" page="paginator.page" num-pages="paginator.numPages"></pagination>
-    <span class="alert alert-block" ng-hide="domainsLoaded">Loading domains...</span>
+<div class="alert alert-block" ng-show="loadingServers">Loading servers...</div>
+
+<div ng-hide="loadingServers">
+    Select server:
+    <select
+        ng-model="servers.selected"
+        ng-options="server.id as server.hostname for server in servers.list">
+
+    </select>
+</div>
+
+<div ng-show="servers.selected != null">
+
+    <accordion close-others="oneAtATime">
+        <accordion-group heading="Search">
+            Search: <input type="text" ng-model="search.value" />
+            <button type="button" ng-click="doSearch()" class="btn btn-small">Search</button>
+            <button type="button" ng-click="removeSearch()" class="btn btn-small">Go back to results</button>
+        </accordion-group>
+    </accordion>
+
+    <div class="alert alert-block" ng-show="loadingDomains">Loading domains...</div>
+
+    <table class="table table-condensed table-striped" ng-hide="loadingDomains">
+        <tr>
+            <th>ID</th>
+            <th>Domain</th>
+            <th>Actions</th>
+        </tr>
+        <tr ng-hide="isSearch" ng-repeat="domain in servers.current.domains | orderBy:'name'">
+            <td>{{ domain.id }}</td>
+            <td>{{ domain.name }}</td>
+            <td>
+                <a ng-href="#/domains/{{ domain.id }}/edit" class="btn btn-small"><i class="icon-pencil"></i> Edit</a>
+                <a ng-click="remove(domain)" class="btn btn-small"><i class="icon-remove"></i> Remove</a>
+            </td>
+        </tr>
+        <tr ng-show="isSearch" ng-repeat="domain in servers.current.domains_search | orderBy:'name'">
+            <td>{{ domain.id }}</td>
+            <td>{{ domain.name }}</td>
+            <td>
+                <a ng-href="#/domains/{{ domain.id }}/edit" class="btn btn-small"><i class="icon-pencil"></i> Edit</a>
+                <a ng-click="remove(domain)" class="btn btn-small"><i class="icon-remove"></i> Remove</a>
+            </td>
+        </tr>
+        <tr ng-show="servers.current.domains.length == 0">
+            <td colspan="3">There are no domains in the server</td>
+        </tr>
+    </table>
+
+    <pagination ng-hide="loadingDomains" total-items="servers.current.paginator.total" page="servers.current.paginator.page" num-pages="servers.current.paginator.numPages"></pagination>
 </div>

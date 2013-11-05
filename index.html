@@ -5,6 +5,7 @@
     <title>ServerGrove API demo</title>
 
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.min.css" />
 
     <script src="/jquery-2.0.3.js"></script>
@@ -29,7 +30,38 @@
 </head>
 <body>
 
-<div ng-view></div>
+<div class="container-fluid">
+
+
+
+    <div class="row-fluid" ng-controller="TaskManagerCtrl">
+        <div class="span2" style="padding-top:10px">
+            <img src="logo.png" class="img-polaroid" />
+
+            <div ng-repeat="task in tasks">
+
+                <div>{{ task.title }}</div>
+                <div>
+                    <progress percent="task.percent" class="progress-striped active"></progress>
+                    <span>cancel</span>
+                </div>
+
+
+
+            </div>
+
+            <div class="btn-group btn-group-vertical">
+                <a class="btn" href="#domains">Servers</a>
+                <a class="btn" href="#domains">Domains</a>
+            </div>
+        </div>
+        <div class="span10">
+            <div ng-view></div>
+        </div>
+    </div>
+</div>
+
+
 
 </body>
 </html>
