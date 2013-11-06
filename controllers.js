@@ -115,17 +115,16 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
                 }
             }
         };
-
         cpSvc.domains.post(domain).then(function (newId) {
 
             // fill with the new id and insert into the list
             Restangular.one('domains', newId).get()
                     .then(function (response) {
-                        cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', $scope.paginator.page, function(domains) {
-                            $scope.domains = domains;
+                        cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', $scope.servers.current.paginator.page, function(domains) {
+                            $scope.servers.current.domains = domains;
                             $scope.domainsLoaded = true;
 
-                            $scope.paginator = domains.__paginator;
+                            $scope.servers.current.paginator = domains.__paginator;
                         }, true);
                         $scope.resetNewDomain();
                     });
