@@ -221,6 +221,9 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     $scope.removeSearch = function() {
         $scope.loadingDomains = false;
         $scope.isSearch = false;
+        $scope.search = {
+                'value': ''
+            };
         cpSvc.loadDomains($scope.servers.selected, 1, function(domains) {
             $scope.servers.current.domains = domains;
             $scope.servers.current.paginator = domains.__paginator;
