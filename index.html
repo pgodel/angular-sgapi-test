@@ -4,17 +4,36 @@
     <meta charset="utf-8">
     <title>ServerGrove API demo</title>
 
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/app/styles/bootstrap.css" />
+    <link rel="stylesheet" href="/app/styles/bootstrap-responsive.css" />
 
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.min.css" />
+    <script src="/app/components/jquery/jquery.min.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-affix.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-alert.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-button.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-carousel.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-collapse.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-modal.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-scrollspy.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-tab.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-tooltip.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-popover.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-transition.js"></script>
+    <script src="/app/components/bootstrap/js/bootstrap-typeahead.js"></script>
 
-    <script src="/jquery-2.0.3.js"></script>
-    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script src="/app/components/angular/angular.js"></script>
+    <script src="/app/components/lodash/lodash.js"></script>
+    <script src="/app/components/restangular/dist/restangular.js"></script>
+    <script src="/app/components/lodash/lodash.js"></script>
 
-    <script src="/angular/angular.js"></script>
-    <script src="/lodash.js"></script>
-    <script src="/restangular.js"></script>
-    <script src="/ui-bootstrap-0.6.0.js"></script>
+
+    <script src="/app/components/angular-ui-bootstrap/src/accordion/accordion.js"></script>
+    <script src="/app/components/angular-ui-bootstrap/src/collapse/collapse.js"></script>
+    <script src="/app/components/angular-ui-bootstrap/src/pagination/pagination.js"></script>
+    <script src="/app/components/angular-ui-bootstrap/src/progressbar/progressbar.js"></script>
+
+
     <script src="/ui-bootstrap-tpls-0.6.0.js"></script>
     <script src="/controllers.js"></script>
     <script src="/services.js"></script>
@@ -54,6 +73,12 @@
                 <a class="btn" href="#servers">Servers</a>
                 <a class="btn" href="#domains">Domains</a>
             </div>
+
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="#home"><i class="icon-home"></i> Home</a></li>
+                <li><a href="#servers"><i class="icon-hdd"></i> My servers</a></li>
+                <li><a href="#domains"><i class="icon-tag"></i> Domains</a></li>
+            </ul>
         </div>
         <div class="span10">
             <div ng-view></div>
