@@ -1,4 +1,4 @@
-<div class="modal hide fade">
+<div id="modal-domain-add" class="modal hide fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>Add new domain</h3>
@@ -23,11 +23,9 @@
         </select>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn">Close</a>
-        <a href="#" ng-click="add()" class="btn btn-primary">Add</a>
+        <button ng-click="add()" class="btn btn-primary">Add</button>
     </div>
 </div>
-
 <div class="modal hide fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -59,6 +57,7 @@
 
 <div ng-show="servers.selected != null">
 
+    <button ng-click="showDomainAddModal()" class="btn">New Domain</button>
     <accordion close-others="oneAtATime">
         <accordion-group heading="Search">
             Search: <input type="text" ng-model="search.value" />

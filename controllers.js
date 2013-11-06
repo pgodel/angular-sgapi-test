@@ -99,6 +99,9 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
     $scope.resetNewDomain();
 
+    $scope.showDomainAddModal = function() {
+        $('#modal-domain-add').modal('show');
+    }
 
     $scope.add = function() {
         var domain = {
@@ -116,6 +119,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
             }
         };
         cpSvc.domains.post(domain).then(function (newId) {
+            $('#modal-domain-add').modal('hide');
 
             // fill with the new id and insert into the list
             Restangular.one('domains', newId).get()
