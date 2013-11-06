@@ -4,7 +4,17 @@
         <h3>Add new domain</h3>
     </div>
     <div class="modal-body">
-        Domain name: <input type="text" ng-model="newdomain.name" />
+        <label>Domain name</label>
+        <input type="text" ng-model="newdomain.name" />
+        <label>IP address</label>
+        <select ng-model="ipAddress">
+            <option>69.195.198.157</option>
+        </select>
+        <label>Web Server</label>
+        <select ng-model="webServer">
+            <option value="app_apache2">apache</option>
+            <option value="app_nginx">nginx</option>
+        </select>
         <label>DNS Service</label>
         <select ng-model="dns_service">
             <option value="0">none</option>

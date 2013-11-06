@@ -78,8 +78,6 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     };
     $scope.statusText = '';
 
-    $scope.dns_service = '0';
-
     $scope.loadingServers = false;
 
     $scope.loadingServers = true;
@@ -94,6 +92,9 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
         $scope.newdomain = {
             name: ''
         };
+        $scope.dns_service = '0';
+        $scope.webServer = 'app_apache2';
+        $scope.ipAddress= '69.195.198.157';
     }
 
     $scope.resetNewDomain();
@@ -103,7 +104,16 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
         var domain = {
             name: $scope.newdomain.name,
             server_id: '4cc4a5c4f597e9db6e660200',
-            services: {'dns': $scope.dns_service}
+            services: {
+                'dns': {
+                    'providerId' : $scope.dns_service
+                },
+                'web': {
+                    'providerId': 'servergrove',
+                    'serverId': '4cc4a5c4f597e9db6e660200',
+                    'appType': $scope.webServer
+                }
+            }
         };
 
         cpSvc.domains.post(domain).then(function (newId) {
