@@ -138,7 +138,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     $scope.remove = function(domain) {
 
         if (confirm("Are you sure you want to remove the domain " + domain.name + "?")) {
-
+            $scope.servers.current.domains = _.without($scope.servers.current.domains, domain);
             cpSvc.asyncRequest(domain.remove({'async': 1}), 100, function(result, taskId) {
                 // domain removed, get page
 
@@ -199,8 +199,6 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
                 };
                 $scope.$emit('task_add');
             });
-
-            $scope.domains = _.without($scope.domains, domain);
 
             /*
             domain.remove().then(function() {
