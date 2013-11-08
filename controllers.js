@@ -383,3 +383,52 @@ function TaskManagerCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     });
 }
 TaskManagerCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc'];
+
+function ServerDetailCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $state) {
+
+    $scope.server = {};
+    $scope.loading = true;
+    $scope.tabSelected = 1;
+    $scope.tabs = [
+        {
+            title: 'Overview',
+            active: true,
+            disabled: false,
+            ccc: 'loadOverview'
+        }
+    ];
+
+    Restangular.one('servers', $state.params.id).get()
+        .then(function (response) {
+            $scope.server = response;
+            $scope.loading = false;
+        });
+
+    $scope.loadOverview = function() {
+        alert(1);
+    };
+
+}
+ServerDetailCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$state'];
+
+function MainCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state) {
+
+    $scope.servers = [];
+    $scope.selectedServer = null;
+
+    $scope.loadingServers = true;
+    cpSvc.loadServers(0, function(servers) {
+        $scope.servers = servers;
+        $scope.loadingServers = false;
+    });
+
+    $scope.selectServer = function(serverId) {
+        $scope.selectedServer = serverId;
+
+        //$window.location.href = '#/domains';
+
+        //window.location.href = '#/domains';
+        $state.go('server_detail', { id: serverId });
+    };
+}
+MainCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];

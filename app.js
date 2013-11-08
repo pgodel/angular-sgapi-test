@@ -1,15 +1,29 @@
 var sgApp = angular.module('sgApp', [
+    'ngRoute',
+    'ui.router',
     'restangular',
     'cpSvc',
     'ui.bootstrap'
 ]);
 
-sgApp.config(['$routeProvider', 'RestangularProvider',
-    function($routeProvider, RestangularProvider) {
-        $routeProvider.
+sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$stateProvider', '$urlRouterProvider',
+    function($routeProvider, RestangularProvider, $locationProvider, $stateProvider, $urlRouterProvider) {
+        /*$routeProvider.
                 when('/servers', {
                     templateUrl: 'partials/server-list.html',
                     controller: 'ServerListCtrl'
+                }).
+                when('/servers/:id', {
+                    templateUrl: 'partials/server-detail.html',
+                    controller: 'ServerDetailCtrl'
+                }).
+                when('/servers/:id/domains', {
+                    templateUrl: 'partials/domain-list.html',
+                    controller: 'DomainListCtrl'
+                }).
+                when('/servers/:id/apps', {
+                    templateUrl: 'partials/app-list.html',
+                    controller: 'AppListCtrl'
                 }).
                 when('/domains', {
                     templateUrl: 'partials/domain-list.html',
@@ -24,8 +38,45 @@ sgApp.config(['$routeProvider', 'RestangularProvider',
                     controller: 'DomainDetailCtrl'
                 }).
                 otherwise({
-                    redirectTo: '/servers'
-                });
+                    redirectTo: '/'
+                });*/
+
+
+        // For any unmatched url, redirect to /state1
+        $urlRouterProvider.otherwise("/");
+        //
+        // Now set up the states
+        $stateProvider
+            .state('server_list', {
+                url: "/servers",
+                templateUrl: "partials/server-list.html",
+                controller: 'ServerListCtrl'
+            })
+            .state('server_detail', {
+                url: "/servers/:id",
+                templateUrl: "partials/server-detail.html",
+                controller: 'ServerDetailCtrl'
+            })
+            /*.state('state1.list', {
+                url: "/list",
+                templateUrl: "partials/state1.list.html",
+                controller: function($scope) {
+                    $scope.items = ["A", "List", "Of", "Items"];
+                }
+            })
+            /*.state('state2', {
+                url: "/state2",
+                templateUrl: "partials/state2.html"
+            })
+            .state('state2.list', {
+                url: "/list",
+                templateUrl: "partials/state2.list.html",
+                controller: function($scope) {
+                    $scope.things = ["A", "Set", "Of", "Things"];
+                }
+            })*/;
+
+        //$locationProvider.html5Mode(true);
         
         RestangularProvider.setBaseUrl('http://sgcontrol2.local/rest/');
         RestangularProvider.setDefaultRequestParams({

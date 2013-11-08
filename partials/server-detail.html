@@ -1,0 +1,40 @@
+<div class="alert alert-block" ng-show="loading">Loading data...</div>
+
+<div ng-hide="loading">
+    <h1>{{ server.hostname }}</h1>
+
+    <table class="table table-condensed table-striped">
+        <tr>
+            <td>Hostname</td>
+            <td>{{ server.hostname }}</td>
+        </tr>
+        <tr>
+            <td>Plan</td>
+            <td>{{ server.plan }}</td>
+        </tr>
+        <tr>
+            <td>Template</td>
+            <td>{{ server.template }}</td>
+        </tr>
+        <tr>
+            <td>VPS Host</td>
+            <td>{{ server.host.hostname }}</td>
+        </tr>
+        <tr>
+            <td>OS</td>
+            <td>{{ server.os }}</td>
+        </tr>
+        <tr>
+            <td>IP addresses</td>
+            <td>
+                <ul>
+                    <li ng-repeat="ip in server.ips">{{ ip.address }}</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    <a href="#/servers/{{ server.id }}/domains" class="btn">Domains</a>
+    <a href="#/servers/{{ server.id }}/apps" class="btn">Apps</a>
+
+</div>

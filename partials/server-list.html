@@ -10,7 +10,7 @@
             <th>Actions</th>
         </tr>
         <tr ng-hide="isSearch" ng-repeat="server in servers.list | orderBy:'hostname'">
-            <td><a href="#/servers/{{server.id}}/domains">{{ server.id }}</a></td>
+            <td><a href="#/servers/{{server.id}}">{{ server.id }}</a></td>
             <td>{{ server.hostname }}</td>
             <td>
                 <a ng-href="#/servers/{{ server.id }}/edit" class="btn btn-small"><i class="icon-pencil"></i> Edit</a>
@@ -31,3 +31,5 @@
     </table>
     <pagination total-items="servers.paginator.total" page="servers.paginator.page" num-pages="servers.paginator.numPages"></pagination>
 </div>
+
+<div ui-view></div>
