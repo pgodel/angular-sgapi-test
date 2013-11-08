@@ -47,6 +47,10 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
         //
         // Now set up the states
         $stateProvider
+            .state('home', {
+                url: "/",
+                templateUrl: "partials/home.html"
+            })
             .state('server_list', {
                 url: "/servers",
                 templateUrl: "partials/server-list.html",
@@ -56,6 +60,16 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
                 url: "/servers/:id",
                 templateUrl: "partials/server-detail.html",
                 controller: 'ServerDetailCtrl'
+            })
+            .state('server_domain_list', {
+                url: "/servers/:id/domains",
+                templateUrl: "partials/domain-list.html",
+                controller: 'DomainListCtrl'
+            })
+            .state('server_app_list', {
+                url: "/servers/:id/apps",
+                templateUrl: "partials/app-list.html",
+                controller: 'AppListCtrl'
             })
             /*.state('state1.list', {
                 url: "/list",

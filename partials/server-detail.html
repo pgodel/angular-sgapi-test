@@ -34,7 +34,8 @@
         </tr>
     </table>
 
-    <a href="#/servers/{{ server.id }}/domains" class="btn">Domains</a>
-    <a href="#/servers/{{ server.id }}/apps" class="btn">Apps</a>
+    <a ui-sref="server_domain_list({ id: server.id })" class="btn">Domains</a>
+    <a ui-sref="server_app_list({ id: server.id })" class="btn">Apps</a>
+
 
 </div>

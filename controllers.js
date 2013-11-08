@@ -37,31 +37,9 @@ function ServerListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
 }
 
-function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
+function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $state) {
 
-
-    $scope.servers = {
-        selected: null,
-        current: {
-            domains: [],
-            domains_search: [],
-            paginator: {}
-        },
-        list: []
-    };
-
-    $scope.tabs = [
-        {
-            title: 'tab 1',
-            content: 'content 1'
-        },
-        {
-            title: 'tab 2',
-            content: 'content 2'
-        }
-    ];
-
-    $scope.loadingDomains = false;
+    $scope.loading = false;
 
     $scope.isSearch = false;
     $scope.search = {
@@ -78,15 +56,6 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     };
     $scope.statusText = '';
 
-    $scope.loadingServers = false;
-
-    $scope.loadingServers = true;
-    cpSvc.loadServers(0, function(servers) {
-        $scope.servers.list = servers;
-        $scope.loadingServers = false;
-
-        //$scope.servers.paginator = servers.__paginator;
-    });
 
     $scope.resetNewDomain = function() {
         $scope.newdomain = {
@@ -209,26 +178,26 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     };
 
     $scope.doSearch = function() {
-        $scope.loadingDomains = true;
+        $scope.loading = true;
         $scope.isSearch = true;
         console.log('searching: ' + $scope.search.value);
-        cpSvc.searchDomains($scope.servers.selected, $scope.search.value, 1, function(domains) {
-            $scope.servers.current.domains_search = domains;
-            $scope.servers.current.paginator_search = domains.__paginator;
-            $scope.loadingDomains = false;
+        cpSvc.searchDomains($state.params.id, $scope.search.value, 1, function(domains) {
+            $scope.domains_search = domains;
+            $scope.paginator_search = domains.__paginator;
+            $scope.loading = false;
         });
     };
 
     $scope.removeSearch = function() {
-        $scope.loadingDomains = false;
+        $scope.loading = true;
         $scope.isSearch = false;
         $scope.search = {
                 'value': ''
             };
-        cpSvc.loadDomains($scope.servers.selected, 1, function(domains) {
-            $scope.servers.current.domains = domains;
-            $scope.servers.current.paginator = domains.__paginator;
-            $scope.loadingDomains = false;
+        cpSvc.loadDomains($state.params.id, 1, function(domains) {
+            $scope.domains = domains;
+            $scope.paginator = domains.__paginator;
+            $scope.loading = false;
         }, true);
     };
 
@@ -283,18 +252,30 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
         Restangular.one("tasks", $scope.currentAsync).remove();
     };
 
-    $scope.$watch("servers.current.paginator.page", function( newVal, oldVal ){
+
+    $scope.loading = true;
+    console.log('loading ' + $state.params.id);
+    cpSvc.loadDomains($state.params.id, 1, function(domains) {
+        $scope.domains = domains;
+        $scope.domainsLoaded = true;
+        $scope.paginator = domains.__paginator;
+        $scope.loading = false;
+    }, true);
+
+    $scope.$watch("paginator.page", function( newVal, oldVal ){
         if (newVal != undefined && oldVal != undefined) {
-            $scope.loadingDomains = true;
-            cpSvc.loadDomains($scope.servers.selected, newVal, function(domains) {
-                $scope.servers.current.domains = domains;
+            $scope.loading = true;
+            cpSvc.loadDomains($state.params.id, newVal, function(domains) {
+                $scope.domains = domains;
                 $scope.domainsLoaded = true;
-                $scope.servers.current.paginator = domains.__paginator;
-                $scope.loadingDomains = false;
+                $scope.paginator = domains.__paginator;
+                $scope.loading = false;
             }, true);
         }
 
     } );
+
+
 
     $scope.$watch("servers.selected", function(newVal, oldVal){
 
@@ -321,7 +302,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
     } );
 
 }
-DomainListCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc'];
+DomainListCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$state'];
 
 function DomainEditCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
@@ -348,6 +329,8 @@ DomainEditCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular',
 function TaskManagerCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc) {
 
     $scope.tasks = [];
+
+    $scope.test = '1';
 
     $rootScope.$on('task_add', function () {
         console.log('adding task');
@@ -415,6 +398,25 @@ function MainCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $locatio
 
     $scope.servers = [];
     $scope.selectedServer = null;
+
+    $scope.user = {
+        name: 'Raul Fraile',
+        avatar: 'https://pbs.twimg.com/profile_images/378800000213396112/e23ebf3ee11b738595f66c31a9978c43.png'
+    };
+
+    $scope.breadcrumbs = [
+        {
+            title: 'Home',
+            state: 'home'
+        },
+        {
+            title: 'Servers',
+            state: 'server_list'
+        },
+        {
+            title: 'server-1'
+        }
+    ];
 
     $scope.loadingServers = true;
     cpSvc.loadServers(0, function(servers) {

@@ -44,18 +44,7 @@
 
 <h1>Domains</h1>
 
-<div class="alert alert-block" ng-show="loadingServers">Loading servers...</div>
 
-<div ng-hide="loadingServers">
-    Select server:
-    <select
-        ng-model="servers.selected"
-        ng-options="server.id as server.hostname for server in servers.list">
-
-    </select>
-</div>
-
-<div ng-show="servers.selected != null">
 
     <button ng-click="showDomainAddModal()" class="btn">New Domain</button>
     <accordion close-others="oneAtATime">
@@ -66,15 +55,15 @@
         </accordion-group>
     </accordion>
 
-    <div class="alert alert-block" ng-show="loadingDomains">Loading domains...</div>
+    <div class="alert alert-block" ng-show="loading">Loading domains...</div>
 
-    <table class="table table-condensed table-striped" ng-hide="loadingDomains">
+    <table class="table table-condensed table-striped" ng-hide="loading">
         <tr>
             <th>ID</th>
             <th>Domain</th>
             <th>Actions</th>
         </tr>
-        <tr ng-hide="isSearch" ng-repeat="domain in servers.current.domains | orderBy:'name'">
+        <tr ng-hide="isSearch" ng-repeat="domain in domains | orderBy:'name'">
             <td>{{ domain.id }}</td>
             <td>{{ domain.name }}</td>
             <td>
@@ -82,7 +71,7 @@
                 <a ng-click="remove(domain)" class="btn btn-small"><i class="icon-remove"></i> Remove</a>
             </td>
         </tr>
-        <tr ng-show="isSearch" ng-repeat="domain in servers.current.domains_search | orderBy:'name'">
+        <tr ng-show="isSearch" ng-repeat="domain in domains_search | orderBy:'name'">
             <td>{{ domain.id }}</td>
             <td>{{ domain.name }}</td>
             <td>
@@ -90,10 +79,10 @@
                 <a ng-click="remove(domain)" class="btn btn-small"><i class="icon-remove"></i> Remove</a>
             </td>
         </tr>
-        <tr ng-show="servers.current.domains.length == 0">
+        <tr ng-show="domains.length == 0">
             <td colspan="3">There are no domains in the server</td>
         </tr>
     </table>
 
-    <pagination ng-hide="loadingDomains" total-items="servers.current.paginator.total" page="servers.current.paginator.page" num-pages="servers.current.paginator.numPages"></pagination>
-</div>
+    <pagination ng-hide="loading || isSearch" total-items="paginator.total" page="paginator.page" num-pages="paginator.numPages"></pagination>
+    <pagination ng-hide="loading || !isSearch" total-items="paginator_search.total" page="paginator_search.page" num-pages="paginator_search.numPages"></pagination>
