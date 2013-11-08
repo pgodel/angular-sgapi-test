@@ -104,6 +104,19 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
         });
     };
 
+    $scope.searchAutocomplete = [];
+    $scope.autocomplete_loading=true;
+
+
+
+
+    $scope.searchDomains = function(c) {
+        console.log(c);
+        $scope.autocomplete_loading=true;
+
+        return Restangular.all('domains').getList({'filter_server': $state.params.id, 'filter_name': c, 'page': 1, 'limit': 10});
+    };
+
     $scope.remove = function(domain) {
 
         if (confirm("Are you sure you want to remove the domain " + domain.name + "?")) {

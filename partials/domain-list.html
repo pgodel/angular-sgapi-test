@@ -49,9 +49,11 @@
     <button ng-click="showDomainAddModal()" class="btn">New Domain</button>
     <accordion close-others="oneAtATime">
         <accordion-group heading="Search">
-            Search: <input type="text" ng-model="search.value" />
-            <button type="button" ng-click="doSearch()" class="btn btn-small">Search</button>
-            <button type="button" ng-click="removeSearch()" class="btn btn-small">Go back to results</button>
+            <div style="padding-bottom:90px">
+                Search: <input type="text" ng-model="search.value" typeahead-loading="autocomplete_loading" typeahead="domain.name for domain in searchDomains($viewValue) | filter:$viewValue | limitTo:8" />
+                <button type="button" ng-click="doSearch()" class="btn btn-small">Search</button>
+                <button type="button" ng-click="removeSearch()" class="btn btn-small">Go back to results</button>
+            </div>
         </accordion-group>
     </accordion>
 
