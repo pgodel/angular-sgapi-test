@@ -92,15 +92,15 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
 
             // fill with the new id and insert into the list
             Restangular.one('domains', newId).get()
-                    .then(function (response) {
-                        cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', $scope.servers.current.paginator.page, function(domains) {
-                            $scope.servers.current.domains = domains;
-                            $scope.domainsLoaded = true;
+                .then(function (response) {
+                    cpSvc.loadDomains('4cc4a5c4f597e9db6e660200', $scope.servers.current.paginator.page, function(domains) {
+                        $scope.servers.current.domains = domains;
+                        $scope.domainsLoaded = true;
 
-                            $scope.servers.current.paginator = domains.__paginator;
-                        }, true);
-                        $scope.resetNewDomain();
-                    });
+                        $scope.servers.current.paginator = domains.__paginator;
+                    }, true);
+                    $scope.resetNewDomain();
+                });
         });
     };
 
@@ -183,10 +183,10 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
             });
 
             /*
-            domain.remove().then(function() {
-                // remove from list
-                $scope.domains = _.without($scope.domains, domain);
-            });*/
+             domain.remove().then(function() {
+             // remove from list
+             $scope.domains = _.without($scope.domains, domain);
+             });*/
         }
     };
 
@@ -205,8 +205,8 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
         $scope.loading = true;
         $scope.isSearch = false;
         $scope.search = {
-                'value': ''
-            };
+            'value': ''
+        };
         cpSvc.loadDomains($state.params.id, 1, function(domains) {
             $scope.domains = domains;
             $scope.paginator = domains.__paginator;
@@ -443,9 +443,9 @@ function MainCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $locatio
 
 
     /*$scope.user = {
-        name: 'Raul Fraile',
-        avatar: 'https://pbs.twimg.com/profile_images/378800000213396112/e23ebf3ee11b738595f66c31a9978c43.png'
-    };*/
+     name: 'Raul Fraile',
+     avatar: 'https://pbs.twimg.com/profile_images/378800000213396112/e23ebf3ee11b738595f66c31a9978c43.png'
+     };*/
 
     $scope.breadcrumbs = [
         {
@@ -517,12 +517,25 @@ function LogoutCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $locat
 LogoutCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];
 
 function TimelineCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state) {
-console.log('timeline');
-    $scope.events = [];
 
-    cpSvc.loadTimeline(1, function (response) {
-       $scope.events = response;
+    $scope.events = [];
+    $scope.loading = true;
+    $scope.page = 1;
+
+    cpSvc.loadTimeline($scope.page, function (response) {
+        $scope.events = response;
+        $scope.page++;
+        $scope.loading = false;
     });
+
+    $scope.next = function() {
+        $scope.loading = true;
+        cpSvc.loadTimeline($scope.page, function (response) {
+            $scope.events = $scope.events.concat(response);
+            $scope.loading = false;
+            $scope.page++;
+        });
+    };
 
 }
 TimelineCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];
