@@ -9,22 +9,29 @@
         <label>IP address</label>
         <select ng-model="ipAddress" ng-options="i.address for i in ips">
         </select>
-        <label>Web Server</label>
-        <select ng-model="webServer">
-            <option value="app_apache2">apache</option>
-            <option value="app_nginx">nginx</option>
-        </select>
-        <label>DNS Service</label>
-        <select ng-model="dns_service">
-            <option value="0">none</option>
-            <option>servergrove</option>
-            <option>linode</option>
-        </select>
-        <label>Email Service</label>
-        <select ng-model="email_service">
-            <option value="0">none</option>
-            <option>servergrove</option>
-        </select>
+        <label><input type="checkbox" ng-model="webService"/> Web Hosting</label>
+        <div ng-show="webService">
+            <label>Web Server</label>
+            <select ng-model="webServer">
+                <option value="app_apache2">apache</option>
+                <option value="app_nginx">nginx</option>
+            </select>
+        </div>
+        <label><input type="checkbox" ng-model="dnsService"/> DNS Service</label>
+        <div ng-show="dnsService">
+            <label>DNS Service Provider</label>
+            <select ng-model="dnsProvider">
+                <option>servergrove</option>
+                <option>linode</option>
+            </select>
+                </div>
+        <label><input type="checkbox" ng-model="emailService"/> Email Service</label>
+        <div ng-show="emailService">
+            <label>Email Service Provider</label>
+            <select ng-model="emailProvider">
+                <option>servergrove</option>
+            </select>
+        </div>
     </div>
     <div class="modal-footer">
         <button ng-click="add()" class="btn btn-primary">Add</button>

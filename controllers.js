@@ -61,10 +61,13 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
         $scope.newdomain = {
             name: ''
         };
-        $scope.dns_service = '0';
-        $scope.email_service = '0';
+        $scope.dnsService = false;
+        $scope.emailService = false;
+        $scope.webService = false;
         $scope.webServer = 'app_apache2';
-        $scope.ipAddress= cpSvc.server.mainIpAddress;
+        $scope.dnsProvider = 'servergrove';
+        $scope.emailProvider = 'servergrove';
+        $scope.ipAddress = cpSvc.server.main_ip;
         $scope.ips = cpSvc.server.ips;
         console.log(cpSvc.server);
         console.log($scope.ips);
@@ -73,6 +76,7 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
     $scope.resetNewDomain();
 
     $scope.showDomainAddModal = function() {
+        $scope.resetNewDomain();
         $('#modal-domain-add').modal('show');
     }
 
@@ -81,19 +85,30 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
             name: $scope.newdomain.name,
             server_id: '4cc4a5c4f597e9db6e660200',
             services: {
-                'dns': {
-                    'providerId' : $scope.dns_service
-                },
-                'email': {
-                    'providerId' : $scope.email_service
-                },
-                'web': {
-                    'providerId': 'servergrove',
-                    'serverId': '4cc4a5c4f597e9db6e660200',
-                    'appType': $scope.webServer
-                }
+                'dns': 0,
+                'email': 0,
+                'web' : 0
             }
         };
+
+        if ($scope.dnsService) {
+            domain.services.dns = {
+                                'providerId' : $scope.dnsProvider
+                            };
+        }
+        if ($scope.emailService) {
+            domain.services.email = {
+                                'providerId' : $scope.emailProvider
+                            };
+        }
+        if ($scope.webService) {
+            domain.services.web =  {
+                                'providerId': 'servergrove',
+                                'serverId': '4cc4a5c4f597e9db6e660200',
+                                'appType': $scope.webServer
+                            };
+        }
+
         cpSvc.domains.post(domain).then(function (newId) {
             $('#modal-domain-add').modal('hide');
 
@@ -407,6 +422,10 @@ function ServerDetailCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, 
             cpSvc.server = response;
             $scope.loading = false;
         });
+
+    $scope.discover = function(server) {
+        alert("discover");
+    }
 
     $scope.loadOverview = function() {
         alert(1);
