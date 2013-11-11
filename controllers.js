@@ -515,3 +515,14 @@ function LogoutCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $locat
 
 }
 LogoutCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];
+
+function TimelineCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state) {
+console.log('timeline');
+    $scope.events = [];
+
+    cpSvc.loadTimeline(1, function (response) {
+       $scope.events = response;
+    });
+
+}
+TimelineCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];

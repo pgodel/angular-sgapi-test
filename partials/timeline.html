@@ -1,0 +1,10 @@
+<h1>Timeline</h1>
+
+<ul>
+    <li ng-repeat="event in events | orderBy:'id':'desc'">
+        <div style="font-size: 26px; padding-bottom: 40px;">
+
+            {{ event.message }}
+        </div>
+    </li>
+</ul>

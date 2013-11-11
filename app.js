@@ -62,6 +62,11 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
                 url: "/",
                 templateUrl: "partials/home.html"
             })
+            .state('timeline', {
+                url: "/timeline",
+                templateUrl: "partials/timeline.html",
+                controller: 'TimelineCtrl'
+            })
             .state('server_list', {
                 url: "/servers",
                 templateUrl: "partials/server-list.html",
@@ -146,11 +151,15 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
         });
 
 
-        RestangularProvider.setErrorInterceptor(function(response) {
+        /*RestangularProvider.setErrorInterceptor(function(response) {
+            if (response.status === 401) {
+                console.log(cpSvc);
+                cpSvc.goLogin();
+            };
             console.log('Error: ' + response.data.message);
 
             return false;
-        });
+        });*/
 
         gravatarServiceProvider.defaults = {
             size     : 100,
@@ -159,7 +168,6 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
 
         // Use https endpoint
         gravatarServiceProvider.secure = true;
-
 
     }
 ]);

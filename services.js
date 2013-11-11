@@ -1,5 +1,5 @@
 var cpSvc = angular.module('cpSvc', ['restangular']);
-cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
+cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout, $state) {
     var svc = {
         domains: null,
         servers: null,
@@ -58,6 +58,14 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
                     $rootScope.$broadcast('sgSvcLoadServers');
                     if (angular.isFunction(onSuccess)) {
                         onSuccess.call(undefined, svc.servers);
+                    }
+                });
+        },
+        loadTimeline: function (page, onSuccess) {
+            return Restangular.all('events').getList({'page': page, 'limit': 10})
+                .then(function (response) {
+                    if (angular.isFunction(onSuccess)) {
+                        onSuccess.call(undefined, response);
                     }
                 });
         },
