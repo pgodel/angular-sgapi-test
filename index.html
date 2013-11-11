@@ -37,6 +37,9 @@
 
     <script src="/app/components/angular-ui-router/release/angular-ui-router.js"></script>
 
+    <script src="/app/components/angular-gravatar/src/md5.js"></script>
+    <script src="/app/components/angular-gravatar/build/angular-gravatar.js"></script>
+
 
     <script src="/ui-bootstrap-tpls-0.6.0.js"></script>
     <script src="/controllers.js"></script>
@@ -62,8 +65,9 @@
     <div class="navbar-inner">
         <a class="brand" href="#">
             ServerGrove
+            <sub style="font-size: 9px">BETA</sub>
         </a>
-        <ul class="nav">
+        <ul class="nav" ng-show="isAuth">
             <li class="active"><a href="#">Home</a></li>
             <li>
                 <ul class="nav">
@@ -80,7 +84,9 @@
                     </li>
                 </ul>
             </li>
-            <li><a href="#">Link</a></li>
+            <li>
+                <a href="#">Timeline</a>
+            </li>
         </ul>
 
     </div>
@@ -95,12 +101,15 @@
 
 
     <div class="row-fluid" ng-controller="MainCtrl">
-        <div class="span2" style="padding-top:10px">
+        <div class="span2" style="padding-top:10px" ng-show="isAuth">
 
             <div>
-                <img ng-src="{{ user.avatar }}" width="48" height="48" class="img-polaroid" />
+                <img gravatar-src="user.email" gravatar-size="48">
+
                 <br/>
-                {{ user.name }}
+                {{ user.first_name }} {{ user.last_name }}
+                <br/>
+                <a ui-sref="logout" class="btn">Logout</a>
             </div>
 
 
@@ -121,7 +130,7 @@
         </div>
         <div class="span10">
 
-            <ul class="breadcrumb">
+            <ul class="breadcrumb" ng-show="isAuth">
                 <li ng-repeat="item in breadcrumbs">
                     <a ui-sref="item.status">{{ item.title }}</a>
                     <span class="divider" ng-show="!$last">/</span>

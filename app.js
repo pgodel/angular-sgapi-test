@@ -3,11 +3,12 @@ var sgApp = angular.module('sgApp', [
     'ui.router',
     'restangular',
     'cpSvc',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ui.gravatar'
 ]);
 
-sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$stateProvider', '$urlRouterProvider',
-    function($routeProvider, RestangularProvider, $locationProvider, $stateProvider, $urlRouterProvider) {
+sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$stateProvider', '$urlRouterProvider','gravatarServiceProvider',
+    function($routeProvider, RestangularProvider, $locationProvider, $stateProvider, $urlRouterProvider, gravatarServiceProvider) {
         /*$routeProvider.
                 when('/servers', {
                     templateUrl: 'partials/server-list.html',
@@ -47,6 +48,16 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
         //
         // Now set up the states
         $stateProvider
+            .state('login', {
+                url: "/login",
+                templateUrl: "partials/login.html",
+                controller: 'LoginCtrl'
+            })
+            .state('logout', {
+                url: "/logout",
+                templateUrl: "partials/logout.html",
+                controller: 'LogoutCtrl'
+            })
             .state('home', {
                 url: "/",
                 templateUrl: "partials/home.html"
@@ -93,9 +104,7 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
         //$locationProvider.html5Mode(true);
         
         RestangularProvider.setBaseUrl('http://sgcontrol2.local/rest/');
-        RestangularProvider.setDefaultRequestParams({
-            access_token: 'Zjk3NWJkMDliMTAxOTdkYThiZGJmMmMzOWM4MDBkMzEwYzc1NzJhNjY2ZDc4NDE1MzUyMjgxMjhlNWM3MjNkYQ',
-        });
+
         RestangularProvider.setDefaultHeaders({
             'X-ServerGrove-Client': 'sgcontrol3'
         });
@@ -138,10 +147,19 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
 
 
         RestangularProvider.setErrorInterceptor(function(response) {
-            alert('Error: ' + response.data.message);
+            console.log('Error: ' + response.data.message);
 
             return false;
         });
+
+        gravatarServiceProvider.defaults = {
+            size     : 100,
+            "default": 'retro'
+        };
+
+        // Use https endpoint
+        gravatarServiceProvider.secure = true;
+
 
     }
 ]);

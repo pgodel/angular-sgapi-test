@@ -16,12 +16,13 @@
         "tests"
     ],
     "dependencies": {
-        "angular": "1.2.0-rc.3",
-        "angular-route": "1.2.0-rc.3",
+        "angular": "1.2.0",
+        "angular-route": "1.2.0",
         "angular-ui-bootstrap": "0.6.0",
         "jquery": "2.0.3",
         "bootstrap": "2.3.2",
         "restangular": "1.1.6",
-        "angular-ui-router": "0.2.0"
+        "angular-ui-router": "0.2.0",
+        "angular-gravatar": "0.1.1"
     }
 }

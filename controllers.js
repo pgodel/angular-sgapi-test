@@ -409,13 +409,43 @@ ServerDetailCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular
 
 function MainCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state) {
 
+    $scope.isAuth = false;
+
     $scope.servers = [];
     $scope.selectedServer = null;
 
-    $scope.user = {
+    $scope.loading = {
+        servers: true,
+        user: true
+    };
+
+
+    $rootScope.$on('post_login', function() {
+        Restangular.one('me').get()
+            .then(function (response) {
+                $scope.user = response;
+                $scope.loading.user = false;
+                $scope.isAuth = true;
+            });
+
+        $scope.loadingServers = true;
+        cpSvc.loadServers(0, function(servers) {
+            $scope.servers = servers;
+            $scope.loadingServers = false;
+        });
+    });
+
+
+    $rootScope.$on('post_logout', function() {
+        $scope.isAuth = false;
+        $scope.user = null;
+    });
+
+
+    /*$scope.user = {
         name: 'Raul Fraile',
         avatar: 'https://pbs.twimg.com/profile_images/378800000213396112/e23ebf3ee11b738595f66c31a9978c43.png'
-    };
+    };*/
 
     $scope.breadcrumbs = [
         {
@@ -431,11 +461,7 @@ function MainCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $locatio
         }
     ];
 
-    $scope.loadingServers = true;
-    cpSvc.loadServers(0, function(servers) {
-        $scope.servers = servers;
-        $scope.loadingServers = false;
-    });
+
 
     $scope.selectServer = function(serverId) {
         $scope.selectedServer = serverId;
@@ -447,3 +473,45 @@ function MainCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $locatio
     };
 }
 MainCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];
+
+function LoginCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state) {
+
+    $scope.user = {
+        email: '',
+        password: ''
+    };
+
+    $scope.doLogin = function() {
+        // get login
+        console.log('do login');
+
+
+        Restangular.one("oauth/v2", "token").get({
+            client_id: "51c0961f6c0f4e510be5d4c1_4wh10vjtkbokk8gg0ccwgcg84o0w44coc00s4os4wsso4ossw8",
+            grant_type: "password",
+            username: $scope.user.email,
+            password: $scope.user.password
+        }).then(function (response) {
+                console.log(response);
+
+                cpSvc.setOauthAccessToken(response.access_token);
+                cpSvc.isAuth = true;
+
+                $state.go('home');
+
+                $rootScope.$emit('post_login');
+            }, function (r) {
+                console.log(r);
+            });
+    };
+
+}
+LoginCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];
+
+function LogoutCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state) {
+
+    cpSvc.isAuth = false;
+    $rootScope.$emit('post_logout');
+
+}
+LogoutCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];

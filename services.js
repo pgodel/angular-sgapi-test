@@ -4,6 +4,8 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
         domains: null,
         servers: null,
         doInit: true,
+        isAuth: false,
+        authUser: null,
         init: function (onSuccess, onError) {
             if (!svc.doInit) {
                 if (angular.isFunction(onSuccess)) {
@@ -171,6 +173,11 @@ cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout) {
             list = _.without(list, existing);
             list.push(newObject);
             return list;
+        },
+        setOauthAccessToken: function(token) {
+            Restangular.setDefaultRequestParams({
+                access_token: token
+            });
         }
     }
 
