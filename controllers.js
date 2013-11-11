@@ -62,8 +62,12 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
             name: ''
         };
         $scope.dns_service = '0';
+        $scope.email_service = '0';
         $scope.webServer = 'app_apache2';
-        $scope.ipAddress= '69.195.198.157';
+        $scope.ipAddress= cpSvc.server.mainIpAddress;
+        $scope.ips = cpSvc.server.ips;
+        console.log(cpSvc.server);
+        console.log($scope.ips);
     }
 
     $scope.resetNewDomain();
@@ -79,6 +83,9 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
             services: {
                 'dns': {
                     'providerId' : $scope.dns_service
+                },
+                'email': {
+                    'providerId' : $scope.email_service
                 },
                 'web': {
                     'providerId': 'servergrove',
@@ -397,6 +404,7 @@ function ServerDetailCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, 
     Restangular.one('servers', $state.params.id).get()
         .then(function (response) {
             $scope.server = response;
+            cpSvc.server = response;
             $scope.loading = false;
         });
 
@@ -463,27 +471,41 @@ function MainCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $locatio
 
 
 
-    $scope.selectServer = function(serverId) {
-        $scope.selectedServer = serverId;
+    $scope.selectServer = function(server) {
+        $scope.selectedServer = server.id;
+        cpSvc.server = server;
 
         //$window.location.href = '#/domains';
 
         //window.location.href = '#/domains';
-        $state.go('server_detail', { id: serverId });
+        $state.go('server_detail', { id: server.id });
     };
 }
 MainCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];
 
-function LoginCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state) {
+function LoginCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state, $cookies) {
+
+    $scope.remember = $cookies.remember ? true : false;
 
     $scope.user = {
-        email: '',
-        password: ''
+        email: $cookies.email,
+        password: $cookies.pass
     };
 
     $scope.doLogin = function() {
         // get login
         console.log('do login');
+
+        if ($scope.remember) {
+            $cookies.email = $scope.user.email;
+            $cookies.pass = $scope.user.password;
+            $cookies.remember = '1';
+        } else {
+            $cookies.email = '';
+            $cookies.pass = '';
+            $cookies.remember = '';
+        }
+
 
 
         Restangular.one("oauth/v2", "token").get({
@@ -506,7 +528,7 @@ function LoginCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $locati
     };
 
 }
-LoginCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state'];
+LoginCtrl.$inject = ['$rootScope', '$scope', '$routeParams', 'Restangular', 'cpSvc', '$location', '$window', '$state', '$cookies'];
 
 function LogoutCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $location, $window, $state) {
 

@@ -2,6 +2,7 @@ var cpSvc = angular.module('cpSvc', ['restangular']);
 cpSvc.factory('cpSvc', function ($rootScope, Restangular, $timeout, $state) {
     var svc = {
         domains: null,
+        server: null,
         servers: null,
         doInit: true,
         isAuth: false,
