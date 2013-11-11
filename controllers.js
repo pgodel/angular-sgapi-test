@@ -142,32 +142,24 @@ function DomainListCtrl($rootScope, $scope, $routeParams, Restangular, cpSvc, $s
     $scope.remove = function(domain) {
 
         if (confirm("Are you sure you want to remove the domain " + domain.name + "?")) {
-            $scope.servers.current.domains = _.without($scope.servers.current.domains, domain);
+            $scope.domains = _.without($scope.domains, domain);
             cpSvc.asyncRequest(domain.remove({'async': 1}), 100, function(result, taskId) {
                 // domain removed, get page
 
-                var pagesNb = Math.ceil($scope.servers.current.paginator.page / $scope.servers.current.paginator.limit);
-                var lastPageItemsNb = $scope.servers.current.paginator.total - ((pagesNb-1) * $scope.servers.current.paginator.limit);
+                var pagesNb = Math.ceil($scope.paginator.page / $scope.paginator.limit);
+                var lastPageItemsNb = $scope.paginator.total - ((pagesNb-1) * $scope.paginator.limit);
                 var newPage;
 
-                if ($scope.servers.current.paginator.page < pagesNb || lastPageItemsNb > 1) {
-                    newPage = $scope.servers.current.paginator.page;
+                if ($scope.paginator.page < pagesNb || lastPageItemsNb > 1) {
+                    newPage = $scope.paginator.page;
                 } else {
-                    newPage = $scope.servers.current.paginator.page - 1;
+                    newPage = $scope.paginator.page - 1;
                 }
 
-                cpSvc.loadDomains($scope.servers.selected, newPage, function(domains) {
-                    var i, sel;
-                    for (i=0;i<$scope.servers.list.length;i++) {
-                        if ($scope.servers.list[i].id == $scope.servers.selected) {
-                            sel = i;
-                        }
-                    }
-
-                    $scope.servers.list[sel].domains = domains;
+                cpSvc.loadDomains(cpSvc.server.id, newPage, function(domains) {
+                    $scope.domains = domains;
                     $scope.domainsLoaded = true;
-                    $scope.servers.list[sel].paginator = domains.__paginator;
-                    $scope.servers.current = $scope.servers.list[sel];
+                    $scope.paginator = domains.__paginator;
                     $scope.loadingDomains = false;
 
 
