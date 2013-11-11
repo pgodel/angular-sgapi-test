@@ -23,6 +23,7 @@
     <script src="/app/components/bootstrap/js/bootstrap-typeahead.js"></script>
 
     <script src="/app/components/angular/angular.js"></script>
+    <script src="/app/components/angular-cookies/angular-cookies.js"></script>
     <script src="/app/components/angular-route/angular-route.js"></script>
     <script src="/app/components/lodash/lodash.js"></script>
     <script src="/app/components/restangular/dist/restangular.js"></script>
@@ -79,7 +80,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li ng-hide="loadingServers" ng-repeat="server in servers">
-                                <a ui-sref="server_detail" ng-click="selectServer(server.id)">{{ server.hostname }}</a>
+                                <a ui-sref="server_detail" ng-click="selectServer(server)">{{ server.hostname }}</a>
                             </li>
                         </ul>
                     </li>

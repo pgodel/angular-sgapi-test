@@ -5,7 +5,8 @@ var sgApp = angular.module('sgApp', [
     'cpSvc',
     'ui.bootstrap',
     'ui.gravatar',
-    'infinite-scroll'
+    'infinite-scroll',
+    'ngCookies'
 ]);
 
 sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$stateProvider', '$urlRouterProvider','gravatarServiceProvider',
@@ -45,7 +46,7 @@ sgApp.config(['$routeProvider', 'RestangularProvider', '$locationProvider','$sta
 
 
         // For any unmatched url, redirect to /state1
-        $urlRouterProvider.otherwise("/");
+        $urlRouterProvider.otherwise("/login");
         //
         // Now set up the states
         $stateProvider
